@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
+const { validateFields } = require('../middlewares/validate-fields');
 
 const { 
     userGet, 
@@ -19,6 +20,7 @@ router.post('/', [
     check('email', 'El correo no es válido').isEmail(),
     check('password', 'La contraseña debe tener mínimo 6 caracteres').isLength({ min: 6 }),
     check('role', 'No es un rol permitido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+    validateFields
 ], userPost);
 
 router.patch('/', userPatch);
