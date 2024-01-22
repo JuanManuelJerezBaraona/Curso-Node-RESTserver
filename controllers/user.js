@@ -3,16 +3,21 @@ const bcryptjs = require('bcryptjs');
 
 const User = require('../models/user');
 
-const userGet = (req, res = response) => {
+const usersGet = async (req, res = response) => {
 
-    const { name = 'no name', apikey, page = 1, limit = 10 } = req.query;
+    const { limit = 5, skip = 0 } = req.query;
+    const query = { status: true }
+
+    const [ total, users ] = await Promise.all([
+        User.countDocuments(query),
+        User.find(query)
+            .skip(Number(skip))
+            .limit(Number(limit))
+    ]);
 
     res.json({
-        msg: 'get API - controller',
-        name,
-        apikey,
-        page,
-        limit
+        total,
+        users
     });
 };
 
@@ -29,10 +34,7 @@ const userPut = async (req, res = response) => {
 
     const user = await User.findByIdAndUpdate(id, rest);
 
-    res.json({
-        msg: 'put API - controller',
-        user
-    });
+    res.json(user);
 };
 
 const userPost = async (req, res = response) => {
@@ -60,14 +62,20 @@ const userPatch = (req, res = response) => {
     });
 };
 
-const userDelete = (req, res = response) => {
-    res.json({
-        msg: 'delete API - controller'
-    });
+const userDelete = async (req, res = response) => {
+
+    const { id } = req.params;
+
+    // Físicamente borrado de la BD
+    // const user = await User.findByIdAndDelete(id);
+
+    const user = await User.findByIdAndUpdate(id, { status: false });
+
+    res.json(user);
 };
 
 module.exports = {
-    userGet,
+    usersGet,
     userPut,
     userPost,
     userPatch,

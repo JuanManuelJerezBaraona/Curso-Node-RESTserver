@@ -5,7 +5,7 @@ const { isValidRole, isValidEmail, existUserById } = require('../helpers/db-vali
 const { validateFields } = require('../middlewares/validate-fields');
 
 const { 
-    userGet, 
+    usersGet, 
     userPut, 
     userPost, 
     userDelete, 
@@ -13,7 +13,7 @@ const {
 
 const router = Router();
 
-router.get('/', userGet);
+router.get('/', usersGet);
 
 router.put('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
@@ -34,6 +34,10 @@ router.post('/', [
 
 router.patch('/', userPatch);
 
-router.delete('/', userDelete);
+router.delete('/:id', [
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(existUserById),
+    validateFields
+], userDelete);
 
 module.exports = router;
