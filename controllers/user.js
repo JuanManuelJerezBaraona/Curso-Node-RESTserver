@@ -65,10 +65,6 @@ const userPatch = (req, res = response) => {
 const userDelete = async (req, res = response) => {
 
     const { id } = req.params;
-
-    // Físicamente borrado de la BD
-    // const user = await User.findByIdAndDelete(id);
-
     const user = await User.findByIdAndUpdate(id, { status: false });
 
     res.json(user);
