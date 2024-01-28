@@ -37,7 +37,10 @@
 
             // con window.location.origin se obtiene por decir de una manera el root de la url
             // lo cual no importa si la url es http o https
-            const url = `${window.location.origin}/api/auth/google`;
+            const url = (window.location.hostname.includes('localhost'))
+                ? 'http://localhost:8080/api/auth/google'
+                : 'https://node-rest-server-jsgj.onrender.com/api/auth/google'
+                
             const body = { id_token: response.credential };
 
             fetch(url, {
