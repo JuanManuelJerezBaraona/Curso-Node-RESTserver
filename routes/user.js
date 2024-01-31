@@ -8,22 +8,22 @@ const { validateJWT } = require('../middlewares/validate-jwt');
 const { validateFields } = require('../middlewares/validate-fields');
 
 const { 
-    usersGet, 
-    userPut, 
-    userPost, 
-    userDelete, 
-    userPatch } = require('../controllers/user');
+    getUsers, 
+    putUser, 
+    postUser, 
+    patchUser, 
+    deleteUser } = require('../controllers/user');
 
 const router = Router();
 
-router.get('/', usersGet);
+router.get('/', getUsers);
 
 router.put('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(existUserById),
     check('role').custom(isValidRole),
     validateFields
-], userPut);
+], putUser);
 
 router.post('/', [
     check('name', 'El nombre es obligatorio').not().isEmpty(),
@@ -33,9 +33,9 @@ router.post('/', [
     // check('role', 'No es un rol permitido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
     check('role').custom(isValidRole),
     validateFields
-], userPost);
+], postUser);
 
-router.patch('/', userPatch);
+router.patch('/', patchUser);
 
 router.delete('/:id', [
     validateJWT,
@@ -44,6 +44,6 @@ router.delete('/:id', [
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(existUserById),
     validateFields
-], userDelete);
+], deleteUser);
 
 module.exports = router;

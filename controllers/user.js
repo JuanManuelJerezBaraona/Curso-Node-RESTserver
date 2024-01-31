@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs');
 
 const User = require('../models/user');
 
-const usersGet = async (req, res = response) => {
+const getUsers = async (req, res = response) => {
 
     const { limit = 5, skip = 0 } = req.query;
     const query = { status: true }
@@ -21,7 +21,7 @@ const usersGet = async (req, res = response) => {
     });
 };
 
-const userPut = async (req, res = response) => {
+const putUser = async (req, res = response) => {
 
     const { id } = req.params;
     const { _id, password, google, email, ...rest } = req.body;
@@ -37,7 +37,7 @@ const userPut = async (req, res = response) => {
     res.json(user);
 };
 
-const userPost = async (req, res = response) => {
+const postUser = async (req, res = response) => {
 
     const { name, email, password, role } = req.body;
     const user = new User({ name, email, password, role });
@@ -54,13 +54,13 @@ const userPost = async (req, res = response) => {
     });
 };
 
-const userPatch = (req, res = response) => {
+const patchUser = (req, res = response) => {
     res.json({
         msg: 'patch API - controller'
     });
 };
 
-const userDelete = async (req, res = response) => {
+const deleteUser = async (req, res = response) => {
 
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, { status: false });
@@ -69,9 +69,9 @@ const userDelete = async (req, res = response) => {
 };
 
 module.exports = {
-    usersGet,
-    userPut,
-    userPost,
-    userPatch,
-    userDelete
+    getUsers,
+    putUser,
+    postUser,
+    patchUser,
+    deleteUser
 }
