@@ -39,7 +39,7 @@ router.post('/', [
 // Actualizar - privado - cualquier persona con un token valido
 router.put('/:id', [
     validateJWT,
-    check('category', 'No es un ID de Mongo válido').isMongoId(),
+    // check('category', 'No es un ID de Mongo válido').isMongoId(),
     check('id').custom(existProductById),
     validateFields,
 ], updateProduct);
