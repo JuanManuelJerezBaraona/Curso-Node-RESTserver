@@ -5,7 +5,7 @@ const { User, Category, Product } = require("../models");
 
 const permittedCollections = [
     'usuarios',
-    'categoria',
+    'categorias',
     'productos',
     'roles'
 ];
@@ -18,8 +18,18 @@ const searchUsers = async (term = '', res = response) => {
         const user = await User.findById(term);
         return res.json({
             results: (user) ? [user] : []
-        })
+        });
     }
+
+    const regex = new RegExp(term, 'i');
+    const users = await User.find({
+        $or: [{name: regex}, {email: regex}],
+        $and: [{status: true}]
+    });
+
+    res.json({
+        results: users
+    });
 }
 
 const search = (req, res = response) => {
@@ -36,7 +46,7 @@ const search = (req, res = response) => {
         case 'usuarios':
             searchUsers(term, res);
         break;
-        case 'categoria':
+        case 'categorias':
         
         break;
         case 'productos':
