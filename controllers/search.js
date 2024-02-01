@@ -32,6 +32,45 @@ const searchUsers = async (term = '', res = response) => {
     });
 }
 
+const searchCategories = async (term = '', res = response) => {
+
+    const isMongoID = ObjectId.isValid(term);
+
+    if (isMongoID) {
+        const category = await Category.findById(term);
+        return res.json({
+            results: (category) ? [category] : []
+        });
+    }
+
+    const regex = new RegExp(term, 'i');
+    const categories = await Category.find({name: regex, status: true});
+
+    res.json({
+        results: categories
+    });
+}
+
+const searchProducts = async (term = '', res = response) => {
+
+    const isMongoID = ObjectId.isValid(term);
+
+    if (isMongoID) {
+        const product = await Product.findById(term).populate('category', 'name');
+        return res.json({
+            results: (product) ? [product] : []
+        });
+    }
+
+    const regex = new RegExp(term, 'i');
+    const products = await Product.find({name: regex, status: true})
+                        .populate('category', 'name');
+
+    res.json({
+        results: products
+    });
+}
+
 const search = (req, res = response) => {
     
     const { collection, term } = req.params;
@@ -47,10 +86,10 @@ const search = (req, res = response) => {
             searchUsers(term, res);
         break;
         case 'categorias':
-        
+            searchCategories(term, res);
         break;
         case 'productos':
-        
+            searchProducts(term, res);
         break;
 
         default:
